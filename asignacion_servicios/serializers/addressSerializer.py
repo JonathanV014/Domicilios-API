@@ -38,13 +38,19 @@ class AddressSerializer(serializers.ModelSerializer):
         if (latitude is None and longitude is not None) or (latitude is not None and longitude is None):
             raise serializers.ValidationError("Ambas coordenadas (latitud y longitud) deben estar presentes o ninguna.")
 
-        if Address.objects.filter(
-            city=attrs.get('city'),
-            country=attrs.get('country'),
-            street=attrs.get('street'),
-            latitude=latitude,
-            longitude=longitude
-        ).exists():
+        instance = getattr(self, 'instance', None)
+        queryset = Address.objects.filter(
+            city=attrs.get('city', instance.city if instance else None),
+            country=attrs.get('country', instance.country if instance else None),
+            street=attrs.get('street', instance.street if instance else None),
+            latitude=latitude if latitude is not None else (instance.latitude if instance else None),
+            longitude=longitude if longitude is not None else (instance.longitude if instance else None)
+        )
+        
+        if instance:
+            queryset = queryset.exclude(pk=instance.pk)
+            
+        if queryset.exists():
             raise serializers.ValidationError("Esta dirección ya existe.")
 
         return attrs
