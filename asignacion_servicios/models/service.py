@@ -15,16 +15,22 @@ class Service(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT)
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='pending')
-    estimated_time = models.FloatField(null=True, blank=True) 
-    distance = models.FloatField(null=True, blank=True)
+    estimated_time = models.FloatField(null=True, blank=True)  
+    distance = models.FloatField(null=True, blank=True) 
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Service {self.status}"
+        return f"Service {self.id} - {self.status} ({self.client.name})"
+
+    def clean(self):
+        if self.status == 'completed' and self.driver is None:
+            raise ValidationError("Un servicio completado debe tener un conductor asignado.")
+
     class Meta:
         db_table = 'services'
         ordering = ['-created_at']
         verbose_name = 'Service'
         verbose_name_plural = 'Services'
+        
