@@ -72,7 +72,7 @@ class ServiceService:
         Returns:
             tuple: (Driver o None, distancia mínima o None)
         """
-        available_drivers = Driver.objects.filter(is_available=True, address__city=pickup_address.city, address__city_country=pickup_address.city_country)
+        available_drivers = Driver.objects.filter(is_available=True, address__city=pickup_address.city, address__country=pickup_address.country)
         pickup_coords = (pickup_address.latitude, pickup_address.longitude)
         closest_driver = None
         min_distance = None
