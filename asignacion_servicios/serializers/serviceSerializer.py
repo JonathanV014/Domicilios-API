@@ -14,6 +14,11 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'pickup_address', 'client', 'driver', 'status', 'estimated_time', 'distance', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
+    def validate_status(self, value):
+        if self.instance and self.instance.status == 'completed':
+            raise serializers.ValidationError("No se puede cambiar el estado de un servicio ya completado.")
+        return value
+    
     def validate_estimated_time(self, value):
         if value is not None and value <= 0:
             raise serializers.ValidationError("El tiempo estimado debe ser mayor que 0.")
