@@ -6,15 +6,18 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from .jwt_config import IsAuthenticatedOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import ValidationError as DRFValidationError
+from rest_framework.pagination import PageNumberPagination
 
 class DriverViewSet(viewsets.ModelViewSet):
     """
     ViewSet para operaciones CRUD sobre el modelo Driver.
     """
     serializer_class = DriverSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    @action(detail=True, methods=['post'], url_path='complete-service', permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=['post'], url_path='complete', permission_classes=[IsAuthenticated])
     def complete_service(self, request, pk=None):
         """
         Marca un servicio como completado por el conductor.
@@ -118,8 +121,8 @@ class DriverViewSet(viewsets.ModelViewSet):
             updated_driver = DriverService.update_driver(pk, serializer.validated_data)
             output = self.get_serializer(updated_driver)
             return Response(output.data, status=status.HTTP_200_OK)
-        except ValidationError as e:
-            error_msg = e.message_dict if hasattr(e, 'message_dict') else str(e)
+        except (ValidationError, DRFValidationError) as e:
+            error_msg = e.detail if hasattr(e, 'detail') else (e.message_dict if hasattr(e, 'message_dict') else str(e))
             return Response({"error": error_msg}, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist as e:
             return Response({"error": str(e)}, status=status.HTTP_404_NOT_FOUND)
@@ -144,8 +147,8 @@ class DriverViewSet(viewsets.ModelViewSet):
             updated_driver = DriverService.update_driver(pk, serializer.validated_data)
             output = self.get_serializer(updated_driver)
             return Response(output.data)
-        except ValidationError as e:
-            error_msg = e.message_dict if hasattr(e, 'message_dict') else str(e)
+        except (ValidationError, DRFValidationError) as e:
+            error_msg = e.detail if hasattr(e, 'detail') else (e.message_dict if hasattr(e, 'message_dict') else str(e))
             return Response({"error": error_msg}, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
             return Response({"error": f"Driver with ID {pk} not found."}, status=status.HTTP_404_NOT_FOUND)

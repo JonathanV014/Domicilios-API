@@ -4,6 +4,7 @@ from asignacion_servicios.serializers.addressSerializer import AddressSerializer
 from asignacion_servicios.services.addressService import AddressService
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 class AddressViewSet(viewsets.ModelViewSet):
     """
@@ -18,6 +19,7 @@ class AddressViewSet(viewsets.ModelViewSet):
         destroy(): Elimina una dirección por su ID.
     """
     serializer_class = AddressSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

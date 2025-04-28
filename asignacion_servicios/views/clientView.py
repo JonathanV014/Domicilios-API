@@ -4,12 +4,14 @@ from asignacion_servicios.serializers.clientSerializer import ClientSerializer
 from asignacion_servicios.services.clientService import ClientService
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 class ClientViewSet(viewsets.ModelViewSet):
     """
     ViewSet para operaciones CRUD sobre el modelo Client.
     """
     serializer_class = ClientSerializer
+    pagination_class = PageNumberPagination
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
