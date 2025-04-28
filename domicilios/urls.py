@@ -18,7 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.urls import path
 from asignacion_servicios.views import AddressViewSet, DriverViewSet, ClientViewSet, ServiceViewSet
+from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
+from drf_yasg.views import get_schema_view 
+from drf_yasg import openapi 
+
 
 router = DefaultRouter()
 router.register(r'addresses', AddressViewSet, basename='addresses')
@@ -32,9 +36,21 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Domicilios API",
+        default_version='v1',
+        description="API para gestión de domicilios",
+        contact=openapi.Contact(email="jonayma0110@gmal.com"),
+        license=openapi.License(name="None"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+    authentication_classes=[],
+)
 
 urlpatterns = [
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
