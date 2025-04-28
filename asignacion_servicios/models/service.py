@@ -28,6 +28,18 @@ class Service(models.Model):
         if self.status == 'completed' and self.driver is None:
             raise ValidationError("Un servicio completado debe tener un conductor asignado.")
 
+    def mark_as_completed(self):
+        if self.status != 'in_progress':
+            raise ValidationError("Solo se pueden completar servicios que estén en progreso.")
+        if self.driver is None:
+            raise ValidationError("Un servicio completado debe tener un conductor asignado.")
+        self.status = 'completed'
+        self.save()
+
+    def save(self, *args, **kwargs):
+        if self.driver is not None and self.status == 'pending':
+            self.status = 'in_progress'
+        super().save(*args, **kwargs)
     class Meta:
         db_table = 'services'
         ordering = ['-created_at']
