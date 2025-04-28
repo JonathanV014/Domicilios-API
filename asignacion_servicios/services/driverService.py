@@ -64,6 +64,11 @@ class DriverService:
 
         service.status = 'completed'
         service.save()
+
+        driver = service.driver
+        driver.is_available = True
+        driver.save()
+
         return service
 
     @staticmethod
