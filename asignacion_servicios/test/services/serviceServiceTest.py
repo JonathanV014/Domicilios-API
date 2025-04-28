@@ -16,7 +16,7 @@ class ServiceServiceTestCase(TestCase):
         self.address2 = Address.objects.create(
             name="Destino",
             country="Colombia",
-            city="Medellín",
+            city="Bogotá",
             street="Carrera 10 #20-30",
             latitude=6.2442,
             longitude=-75.5812
@@ -39,16 +39,21 @@ class ServiceServiceTestCase(TestCase):
             driver=None,
             status="pending"
         )
+        self.address1.city_country = f"{self.address1.city}-{self.address1.country}"
+        self.address2.city_country = f"{self.address2.city}-{self.address2.country}"
 
     def test_create_service_ok(self):
+        self.driver.is_available = False
+        self.driver.save()
         data = {
             "pickup_address": self.address1.id,
             "client": self.client,
-            "status": "pending"
         }
-        service = ServiceService.create_service(data)
+        service, warning = ServiceService.create_service(data)
         self.assertEqual(service.status, "pending")
         self.assertEqual(service.pickup_address, self.address1)
+        self.assertIsNotNone(warning)
+        self.assertIn("No hay conductores disponibles", warning)
 
     def test_create_service_without_client(self):
         data = {
@@ -86,8 +91,9 @@ class ServiceServiceTestCase(TestCase):
             "driver": self.driver.id,
             "status": "in_progress"
         }
-        service = ServiceService.create_service(data)
+        service, warning = ServiceService.create_service(data)
         self.assertEqual(service.driver, self.driver)
+        self.assertIsNone(warning)
 
     def test_get_service(self):
         service = ServiceService.get_service(self.service.id)
@@ -134,7 +140,7 @@ class ServiceServiceTestCase(TestCase):
             ServiceService.update_service(999, data)
 
     def test_delete_service(self):
-        service = ServiceService.create_service({
+        service, _ = ServiceService.create_service({
             "pickup_address": self.address1.id,
             "client": self.client,
             "status": "pending"
