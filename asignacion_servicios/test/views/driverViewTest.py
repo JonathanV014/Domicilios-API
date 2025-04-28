@@ -34,12 +34,12 @@ class DriverViewSetTest(APITestCase):
     def test_list_drivers(self):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data["results"]), 2)
 
     def test_filter_drivers_by_availability(self):
         response = self.client.get(self.list_url, {'is_available': True})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(any(d['is_available'] for d in response.data))
+        self.assertTrue(any(d['is_available'] for d in response.data["results"]))
 
     def test_create_driver_success(self):
         data = {
@@ -113,7 +113,7 @@ class DriverViewSetTest(APITestCase):
         url = reverse('drivers-detail', args=[self.driver1.id])
         data = {
             "name": "Juan Actualizado",
-            "phone": self.driver2.phone,  # Teléfono duplicado
+            "phone": self.driver2.phone,  
             "address": self.address1.id,
             "is_available": True
         }
