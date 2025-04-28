@@ -1,0 +1,4 @@
+from .addressServiceTest import AddressServiceTestCase
+from .clientServiceTest import ClientServiceTestCase
+from .driverServiceTest import DriverServiceTestCase
+from .serviceServiceTest import ServiceServiceTestCase

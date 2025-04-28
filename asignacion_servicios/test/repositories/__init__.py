@@ -1,0 +1,4 @@
+from .addressRepositoryTest import AddressRepositoryTestCase
+from .clientRepositoryTest import ClientRepositoryTestCase
+from .driverRepositoryTest import DriverRepositoryTestCase
+from .serviceRepositoryTest import ServiceRepositoryTestCase
