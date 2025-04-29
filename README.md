@@ -268,7 +268,7 @@ Si quisiera desplegar este proyecto en GCP, usaría los siguientes servicios:
 
 ---
 
-## **Contacto**
+## **Contacto **
 
 Si tienes preguntas o sugerencias, puedes contactarme en:  
 **Correo:** jonayma0110@gmail.com
