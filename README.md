@@ -213,6 +213,32 @@ Esto marcará el servicio como completado siempre en cuando el conductor lo teng
 
 ---
 
+## **Ejecutar tests**
+
+Puedes ejecutar los tests del proyecto con el siguiente comando:
+
+```bash
+docker-compose exec domiciliosapi pipenv run python manage.py test asignacion_servicios.test --verbosity 2
+```
+
+Si deseas ejecutar solo los tests de un módulo específico, puedes especificarlo:
+
+- **Tests de repositories**:
+  ```bash
+  docker-compose exec domiciliosapi pipenv run python manage.py test asignacion_servicios.test.repositories --verbosity 2
+  ```
+
+- **Tests de services**:
+  ```bash
+  docker-compose exec domiciliosapi pipenv run python manage.py test asignacion_servicios.test.services --verbosity 2
+  ```
+
+- **Tests de views**:
+  ```bash
+  docker-compose exec domiciliosapi pipenv run python manage.py test asignacion_servicios.test.views --verbosity 2
+  ```
+---
+
 ## **Despliegue en la Nube (AWS/GCP)**
 
 ### **Cómo desplegar en AWS**
