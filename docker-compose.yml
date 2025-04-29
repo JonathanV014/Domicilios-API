@@ -1,0 +1,31 @@
+
+services:
+  dbalfred:
+    image: postgres
+    environment:
+      POSTGRES_DB: alfred
+      POSTGRES_USER: alfred10
+      POSTGRES_PASSWORD: alfred10
+    ports:
+      - "3000:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  domiciliosapi:
+    build: .
+    command: >
+      sh -c "
+      pipenv run python manage.py migrate &&
+      pipenv run python manage.py generate_data &&
+      pipenv run python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - dbalfred
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
