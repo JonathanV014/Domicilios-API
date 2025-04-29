@@ -109,14 +109,15 @@ WSGI_APPLICATION = 'domicilios.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'domicilios',
-        'USER': os.getenv('USER_DB'),
-        'PASSWORD': os.getenv('PASSWORD_DB'),
-        'HOST': os.getenv('HOST_DB'),
-        'PORT': os.getenv('PORT_DB'),
+        'NAME': 'alfred', 
+        'USER': 'alfred10', 
+        'PASSWORD': 'alfred10',  
+        'HOST': 'dbalfred',  
+        'PORT': '5432',  
     }
 }
 
